@@ -30,14 +30,10 @@ FREObject helloWorld(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
     }
 }
 
-
+/*
 FREObject clearAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
     
-    // The duration value passed to VibrateDevice() is not used in the iOS implementation.
-    
-    // AudioServicesPlaySystemSound() vibrates the device.  However,it does nothing if the device does not
-    // support vibration.
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     
     NSArray *allCookies = [storage cookies];
@@ -49,16 +45,14 @@ FREObject clearAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv
     
     return NULL;
 }
+*/
 
 FREObject set(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
     
     NSHTTPCookie *cookie;
-    for (cookie in [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies) {
-        NSLog(@"%@=%@", cookie.name, cookie.value);
-    }
-    
+
     NSMutableDictionary *cookieProperties = [NSMutableDictionary dictionary];
     [cookieProperties setObject:@"testCookie" forKey:NSHTTPCookieName];
     [cookieProperties setObject:[NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]] forKey:NSHTTPCookieValue];
@@ -96,13 +90,9 @@ void ContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, u
     func[0].functionData = NULL;
     func[0].function = &helloWorld;
     
-    func[1].name = (const uint8_t*) "clearAll";
+    func[1].name = (const uint8_t*) "set";
     func[1].functionData = NULL;
-    func[1].function = &clearAll;
-    
-    func[2].name = (const uint8_t*) "set";
-    func[2].functionData = NULL;
-    func[2].function = &set;
+    func[1].function = &set;
     
     *functionsToSet = func;
     
