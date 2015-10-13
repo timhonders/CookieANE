@@ -1,0 +1,22 @@
+<extension xmlns="http://ns.adobe.com/air/extension/3.1">
+    
+    <id>com.kega.extensions.Cookie</id>
+    
+    <versionNumber>1.0</versionNumber>
+    
+    <platforms>
+        <platform name="iPhone-ARM">
+            <applicationDeployment> 
+                <nativeLibrary>libCookie.a</nativeLibrary> 
+                <initializer>ExtentionInitializer</initializer>
+                <finalizer>ExtentionFinalizer</finalizer>
+            </applicationDeployment> 
+        </platform>
+
+
+        <platform name="default"> 
+            <applicationDeployment/> 
+        </platform> 
+    </platforms>
+    
+</extension>
