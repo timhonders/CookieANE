@@ -30,6 +30,54 @@ FREObject helloWorld(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
     }
 }
 
+
+FREObject clearAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    
+    
+    // The duration value passed to VibrateDevice() is not used in the iOS implementation.
+    
+    // AudioServicesPlaySystemSound() vibrates the device.  However,it does nothing if the device does not
+    // support vibration.
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    
+    NSArray *allCookies = [storage cookies];
+    
+    for ( NSHTTPCookie *cookie in allCookies) {
+        [storage deleteCookie:cookie];
+    }
+    
+    
+    return NULL;
+}
+
+FREObject set(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
+    
+    NSHTTPCookie *cookie;
+    for (cookie in [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies) {
+        NSLog(@"%@=%@", cookie.name, cookie.value);
+    }
+    
+    NSMutableDictionary *cookieProperties = [NSMutableDictionary dictionary];
+    [cookieProperties setObject:@"testCookie" forKey:NSHTTPCookieName];
+    [cookieProperties setObject:[NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]] forKey:NSHTTPCookieValue];
+    [cookieProperties setObject:@"www.example.com" forKey:NSHTTPCookieDomain];
+    [cookieProperties setObject:@"www.example.com" forKey:NSHTTPCookieOriginURL];
+    [cookieProperties setObject:@"/" forKey:NSHTTPCookiePath];
+    [cookieProperties setObject:@"0" forKey:NSHTTPCookieVersion];
+    
+    // set expiration to one month from now
+    [cookieProperties setObject:[[NSDate date] dateByAddingTimeInterval:2629743] forKey:NSHTTPCookieExpires];
+    
+    cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+  
+    
+    return NULL;
+}
+
+
 //------------------------------------
 //
 // Required Methods.
@@ -40,7 +88,7 @@ FREObject helloWorld(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
 // The context initializer is called when the runtime creates the extension context instance.
 void ContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet) {
     
-    uint32_t function_count = 1;
+    uint32_t function_count = 2;
     *numFunctionsToTest = function_count;
     
     FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * function_count);
@@ -48,7 +96,13 @@ void ContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, u
     func[0].functionData = NULL;
     func[0].function = &helloWorld;
     
-
+    func[1].name = (const uint8_t*) "clearAll";
+    func[1].functionData = NULL;
+    func[1].function = &clearAll;
+    
+    func[2].name = (const uint8_t*) "set";
+    func[2].functionData = NULL;
+    func[2].function = &set;
     
     *functionsToSet = func;
     
@@ -89,6 +143,7 @@ void ExtentionInitializer(void** extDataToSet, FREContextInitializer* ctxInitial
     *extDataToSet = NULL;
     *ctxInitializerToSet = &ContextInitializer;
     *ctxFinalizerToSet = &ContextFinalizer;
+
     
     NSLog(@"Exiting ExtInitializer()");
 }
