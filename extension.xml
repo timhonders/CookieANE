@@ -7,16 +7,24 @@
     <platforms>
         <platform name="iPhone-ARM">
             <applicationDeployment> 
-                <nativeLibrary>libCookie.a</nativeLibrary> 
+                <nativeLibrary>libCookieANE.a</nativeLibrary> 
                 <initializer>ExtentionInitializer</initializer>
                 <finalizer>ExtentionFinalizer</finalizer>
             </applicationDeployment> 
         </platform>
-
-
-        <platform name="default"> 
+		
+		<platform name="iPhone-x86">
+			<applicationDeployment>
+				<nativeLibrary>libCookieANE.a</nativeLibrary> 
+                <initializer>ExtentionInitializer</initializer>
+                <finalizer>ExtentionFinalizer</finalizer>
+			</applicationDeployment>
+		</platform>
+		
+		<platform name="default"> 
             <applicationDeployment/> 
         </platform> 
+
     </platforms>
     
 </extension>

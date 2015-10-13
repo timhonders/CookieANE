@@ -17,29 +17,41 @@
 			
 			if (!_instance) {
 				
-				context = ExtensionContext.createExtensionContext('com.kega.extensions.Cookie', null);
-				context.addEventListener(StatusEvent.STATUS, onStatus);
-				if  (context == null) {
-					trace('[Cookie] Error - Extension Context is null.');
+				if (this.isSupported){
+					context = ExtensionContext.createExtensionContext('com.kega.extensions.Cookie', null);
+					context.addEventListener(StatusEvent.STATUS, onStatus);
+					if  (context == null) {
+						trace('[Cookie] Error - Extension Context is null.');
+					}
 				}
 				
 				_instance = this;
+				
 			} else {
 				throw Error( '[Cookie] This is a singleton, use getInstance(), do not call the constructor directly.' );
 			}
 			
 		}
 		
+		public function get isSupported():Boolean{
+			var result:Boolean = (Capabilities.manufacturer.search('iOS') > -1 || Capabilities.manufacturer.search('Android') > -1);
+			return result;
+		}
+		
 		public static function getInstance():Cookie {
 			return _instance ? _instance:new Cookie();
 		}
 		
-		public static function clearAll():String { if (!_instance) { Core.getInstance(); } return _instance.clearAll(); }
+/*		public static function clearAll():String { if (!_instance) { Cookie.getInstance(); } return _instance.clearAll(); }
 		public function clearAll():String {
 			var result:String = '';
 			
 			try {
-				context.call('clearAll'); 
+				
+				if (Capabilities.manufacturer.search('iOS') > -1){
+					context.call('helloWorld'); 
+				}
+				
 				result = '[Cookie] clearAll Succes';
 			}catch(error:*){
 				result = '[Cookie] clearAll Error: ' + error;
@@ -47,13 +59,50 @@
 			}
 			return result;
 			
+		}*/
+		
+		
+		public static function hello():String { if (!_instance) { Cookie.getInstance(); } return _instance.hello(); }
+		public function hello():String {
+			var result:String = '';
+			
+			try {
+				if (Capabilities.manufacturer.search('iOS') > -1){
+					result = context.call('helloWorld') as String; 
+				}else{
+					result = 'Windows not supported';
+				}
+			}catch(error:*){
+				result = '[Cookie] hello Error: ' + error + ' ' + context;
+				
+			}
+			return result;
+			
 		}
+		
+		public static function setCookie():String { if (!_instance) { Cookie.getInstance(); } return _instance.setCookie(); }
+		public function setCookie():String {
+			var result:String = '';
+			
+			try {
+				if (Capabilities.manufacturer.search('iOS') > -1){
+					result = context.call('set') as String; 
+				}else{
+					result = 'Windows not supported';
+				}
+			}catch(error:*){
+				result = '[Cookie] hello Error: ' + error + ' ' + context;
+				
+			}
+			return result;
+			
+		}		
 		
 		private function onStatus(event:StatusEvent):void {
 			switch (event.code){
 
 				default:
-					dispatchEvent(new CoreEvent(CoreEvent.MESSAGE, {event:event}));
+					dispatchEvent(new CookieEvent(CookieEvent.MESSAGE, {event:event}));
 				break;
 
 			}
