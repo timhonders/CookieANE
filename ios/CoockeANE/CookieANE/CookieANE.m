@@ -47,7 +47,7 @@ FREObject clearAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv
 }
 
 
-FREObject set(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+FREObject setCookie(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
     
@@ -56,8 +56,8 @@ FREObject set(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     NSMutableDictionary *cookieProperties = [NSMutableDictionary dictionary];
     [cookieProperties setObject:@"testCookie" forKey:NSHTTPCookieName];
     [cookieProperties setObject:[NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]] forKey:NSHTTPCookieValue];
-    [cookieProperties setObject:@"www.example.com" forKey:NSHTTPCookieDomain];
-    [cookieProperties setObject:@"www.example.com" forKey:NSHTTPCookieOriginURL];
+    [cookieProperties setObject:@"tim1.itnova.nl" forKey:NSHTTPCookieDomain];
+    [cookieProperties setObject:@"tim1.itnova.nl" forKey:NSHTTPCookieOriginURL];
     [cookieProperties setObject:@"/" forKey:NSHTTPCookiePath];
     [cookieProperties setObject:@"0" forKey:NSHTTPCookieVersion];
     
@@ -93,12 +93,12 @@ void ContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, u
     func[0].functionData = NULL;
     func[0].function = &helloWorld;
     
-    func[1].name = (const uint8_t*) "set";
+    func[1].name = (const uint8_t*) "setCookie";
     func[1].functionData = NULL;
-    func[1].function = &set;
+    func[1].function = &setCookie;
     
     func[2].name = (const uint8_t*) "clearAll";
-    func[2].functionData =   NULL;
+    func[2].functionData = NULL;
     func[2].function = &clearAll;
     
     *functionsToSet = func;
