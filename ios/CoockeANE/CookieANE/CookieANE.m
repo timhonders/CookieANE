@@ -10,9 +10,11 @@
 
 #import "FlashRuntimeExtensions.h"
 
-FREObject getAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+FREObject getCookies(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
     FREObject cookies_array = NULL;
+    FREObject cookies_object = NULL;
+   
     FRENewObject((const uint8_t*)"Array", 0, NULL, &cookies_array, nil);
     
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
@@ -22,22 +24,24 @@ FREObject getAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]
     for ( NSHTTPCookie *cookie in allCookies) {
         FREDispatchStatusEventAsync(ctx, (uint8_t*)[cookie.name UTF8String], (uint8_t*)[cookie.value UTF8String]);
         
-        FREObject c;
-        FREObject name = (uint8_t*)[cookie.name UTF8String];
-        FREObject value = (uint8_t*)[cookie.value UTF8String];
+        //FREObject c;
+        //FREObject name = (uint8_t*)[cookie.name UTF8String];
+        //FREObject value = (uint8_t*)[cookie.value UTF8String];
         
-        FRENewObject((const uint8_t*)"Object", 0, NULL, &c,NULL);
-        FRESetObjectProperty(c, (const uint8_t*)"name", name, NULL);
-        FRESetObjectProperty(c, (const uint8_t*)"value", value, NULL);
+        //FRENewObject((const uint8_t*)"Object", 0, NULL, &c,NULL);
+        //FRESetObjectProperty(c, (const uint8_t*)"name", name, NULL);
+        //FRESetObjectProperty(c, (const uint8_t*)"value", value, NULL);
         
-        FRESetArrayElementAt(cookies_array, i, c);
+        FRESetObjectProperty(cookies_object, (uint8_t*)[cookie.name UTF8String], (uint8_t*)[cookie.value UTF8String], NULL);
+       
+        //FRESetArrayElementAt(cookies_array, i, c);
         i++;
     }
     
-    return cookies_array;
+    return cookies_object;
 }
 
-FREObject clearAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+FREObject clearCookies(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
     
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
@@ -94,17 +98,17 @@ void ContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, u
     *numFunctionsToTest = function_count;
     
     FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * function_count);
-    func[0].name = (const uint8_t*) "getAll";
+    func[0].name = (const uint8_t*) "getCookies";
     func[0].functionData = NULL;
-    func[0].function = &getAll;
+    func[0].function = &getCookies;
     
     func[1].name = (const uint8_t*) "setCookie";
     func[1].functionData = NULL;
     func[1].function = &setCookie;
     
-    func[2].name = (const uint8_t*) "clearAll";
+    func[2].name = (const uint8_t*) "clearCookies";
     func[2].functionData = NULL;
-    func[2].function = &clearAll;
+    func[2].function = &clearCookies;
 
     
     *functionsToSet = func;
