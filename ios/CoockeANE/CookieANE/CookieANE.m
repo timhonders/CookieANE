@@ -58,8 +58,8 @@ FREObject set(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     NSMutableDictionary *cookieProperties = [NSMutableDictionary dictionary];
     [cookieProperties setObject:@"testCookie" forKey:NSHTTPCookieName];
     [cookieProperties setObject:[NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]] forKey:NSHTTPCookieValue];
-    [cookieProperties setObject:@"www.example.com" forKey:NSHTTPCookieDomain];
-    [cookieProperties setObject:@"www.example.com" forKey:NSHTTPCookieOriginURL];
+    [cookieProperties setObject:@"tim1.itnova.nl" forKey:NSHTTPCookieDomain];
+    [cookieProperties setObject:@"tim1.itnova.nl" forKey:NSHTTPCookieOriginURL];
     [cookieProperties setObject:@"/" forKey:NSHTTPCookiePath];
     [cookieProperties setObject:@"0" forKey:NSHTTPCookieVersion];
     
