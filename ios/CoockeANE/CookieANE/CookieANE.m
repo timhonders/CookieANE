@@ -67,9 +67,9 @@ FREObject set(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
   
-    //for (cookie in [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies) {
-       // NSLog(@"%@=%@", cookie.name, cookie.value);
-    //}
+    for (cookie in [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies) {
+        NSLog(@"%@=%@", cookie.name, cookie.value);
+    }
     
     return NULL;
 }
@@ -85,7 +85,7 @@ FREObject set(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
 // The context initializer is called when the runtime creates the extension context instance.
 void ContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet) {
     
-    uint32_t function_count = 2;
+    uint32_t function_count = 3;
     *numFunctionsToTest = function_count;
     
     FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * function_count);
