@@ -49,8 +49,6 @@ FREObject clearAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv
 
 FREObject set(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
-    FREDispatchStatusEventAsync(ctx, (uint8_t*)[@"setCookie" UTF8String], (uint8_t*)[@"init" UTF8String] );
-    
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
     
     NSHTTPCookie *cookie;
@@ -68,11 +66,10 @@ FREObject set(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
     cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-    
-    for (cookie in [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies) {
-        NSLog(@"%@=%@", cookie.name, cookie.value);
-        FREDispatchStatusEventAsync(ctx, (uint8_t*)[@"setCookie" UTF8String], (uint8_t*)[cookie.name UTF8String] );
-    }
+  
+    //for (cookie in [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies) {
+       // NSLog(@"%@=%@", cookie.name, cookie.value);
+    //}
     
     return NULL;
 }
