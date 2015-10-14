@@ -20,8 +20,7 @@ FREObject getCookies(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
     NSArray *allCookies = [storage cookies];
     int32_t i = 0;
     for ( NSHTTPCookie *cookie in allCookies) {
-        FREDispatchStatusEventAsync(ctx, (uint8_t*)[cookie.name UTF8String], (uint8_t*)[cookie.value UTF8String]);
-        
+
         FREObject c;
         FREObject name;
         FRENewObjectFromUTF8(StrLength([cookie.name UTF8String])+1, (const uint8_t*)[cookie.name UTF8String], &name);
