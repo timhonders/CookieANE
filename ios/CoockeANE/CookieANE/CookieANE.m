@@ -58,17 +58,27 @@ FREObject clearCookies(FREContext ctx, void* funcData, uint32_t argc, FREObject 
 
 FREObject setCookie(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
-    FREDispatchStatusEventAsync(ctx, (uint8_t*)[@"setCookie" UTF8String], (uint8_t*)[@"test" UTF8String]);
-                                
+    uint32_t url_length;
+    const uint8_t *url;
+    FREGetObjectAsUTF8(argv[0], &url_length, &url);
+    
+    uint32_t name_length;
+    const uint8_t *name;
+    FREGetObjectAsUTF8(argv[1], &name_length, &name);
+    
+    uint32_t value_length;
+    const uint8_t *value;
+    FREGetObjectAsUTF8(argv[2], &value_length, &value);
+  
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
     
     NSHTTPCookie *cookie;
     
     NSMutableDictionary *cookieProperties = [NSMutableDictionary dictionary];
-    [cookieProperties setObject:@"testCookie" forKey:NSHTTPCookieName];
-    [cookieProperties setObject:[NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]] forKey:NSHTTPCookieValue];
-    [cookieProperties setObject:@"tim1.itnova.nl" forKey:NSHTTPCookieDomain];
-    [cookieProperties setObject:@"tim1.itnova.nl" forKey:NSHTTPCookieOriginURL];
+    [cookieProperties setObject:[NSString stringWithUTF8String:(char*)name] forKey:NSHTTPCookieName];
+    [cookieProperties setObject:[NSString stringWithUTF8String:(char*)value] forKey:NSHTTPCookieValue];
+    [cookieProperties setObject:[NSString stringWithUTF8String:(char*)url] forKey:NSHTTPCookieDomain];
+    [cookieProperties setObject:[NSString stringWithUTF8String:(char*)url] forKey:NSHTTPCookieOriginURL];
     [cookieProperties setObject:@"/" forKey:NSHTTPCookiePath];
     [cookieProperties setObject:@"0" forKey:NSHTTPCookieVersion];
     
