@@ -71,6 +71,7 @@ FREObject setCookie(FREContext ctx, void* funcData, uint32_t argc, FREObject arg
   
     for (cookie in [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies) {
         NSLog(@"%@=%@", cookie.name, cookie.value);
+        FREDispatchStatusEventAsync(ctx, (uint8_t*)[cookie.name UTF8String], (uint8_t*)[cookie.value UTF8String]);
     }
     
     return NULL;
