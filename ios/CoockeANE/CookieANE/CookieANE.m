@@ -39,6 +39,7 @@ FREObject clearAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv
     NSArray *allCookies = [storage cookies];
     
     for ( NSHTTPCookie *cookie in allCookies) {
+        FREDispatchStatusEventAsync(ctx, (uint8_t*)[cookie.name UTF8String], (uint8_t*)[cookie.value UTF8String]);
         [storage deleteCookie:cookie];
     }
     
