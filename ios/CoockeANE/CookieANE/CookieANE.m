@@ -27,7 +27,7 @@ FREObject getCookies(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
         FREObject value = (uint8_t*)[cookie.value UTF8String];
         
         FRENewObject((const uint8_t*)"Object", 0, NULL, &c,NULL);
-        FRESetObjectProperty(c, (const uint8_t*)"name", name, NULL);
+        FRESetObjectProperty(c, (const uint8_t*)"name", (const uint8_t*)"test", NULL);
         FRESetObjectProperty(c, (const uint8_t*)"value", value, NULL);
         
         FRESetArrayElementAt(cookies_array, i, c);
