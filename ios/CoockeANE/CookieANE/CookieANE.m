@@ -10,26 +10,19 @@
 
 #import "FlashRuntimeExtensions.h"
 
-FREObject helloWorld(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
-{
-    @autoreleasepool {
-        NSLog(@"Entering hellowWorld()");
+FREObject getAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
-        // Create Hello World String
-        NSString *helloString = @"Hello World!";
     
-        // Convert Obj-C string to C UTF8String
-        const char *str = [helloString UTF8String];
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     
-        // Prepare for AS3
-        FREObject retStr;
-        FRENewObjectFromUTF8(strlen(str)+1, (const uint8_t*)str, &retStr);
+    NSArray *allCookies = [storage cookies];
     
-        // Return data back to ActionScript
-        return retStr;
+    for ( NSHTTPCookie *cookie in allCookies) {
+        FREDispatchStatusEventAsync(ctx, (uint8_t*)[cookie.name UTF8String], (uint8_t*)[cookie.value UTF8String]);
     }
+    
+    return NULL;
 }
-
 
 FREObject clearAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
@@ -39,7 +32,6 @@ FREObject clearAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv
     NSArray *allCookies = [storage cookies];
     
     for ( NSHTTPCookie *cookie in allCookies) {
-        FREDispatchStatusEventAsync(ctx, (uint8_t*)[cookie.name UTF8String], (uint8_t*)[cookie.value UTF8String]);
         [storage deleteCookie:cookie];
     }
     
@@ -69,11 +61,6 @@ FREObject setCookie(FREContext ctx, void* funcData, uint32_t argc, FREObject arg
     
     cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-  
-    for (cookie in [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies) {
-        NSLog(@"%@=%@", cookie.name, cookie.value);
-        FREDispatchStatusEventAsync(ctx, (uint8_t*)[cookie.name UTF8String], (uint8_t*)[cookie.value UTF8String]);
-    }
     
     return NULL;
 }
@@ -93,9 +80,9 @@ void ContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, u
     *numFunctionsToTest = function_count;
     
     FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * function_count);
-    func[0].name = (const uint8_t*) "helloWorld";
+    func[0].name = (const uint8_t*) "getAll";
     func[0].functionData = NULL;
-    func[0].function = &helloWorld;
+    func[0].function = &getAll;
     
     func[1].name = (const uint8_t*) "setCookie";
     func[1].functionData = NULL;
@@ -104,6 +91,7 @@ void ContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, u
     func[2].name = (const uint8_t*) "clearAll";
     func[2].functionData = NULL;
     func[2].function = &clearAll;
+
     
     *functionsToSet = func;
     
