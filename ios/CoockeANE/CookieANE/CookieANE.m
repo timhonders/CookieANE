@@ -15,6 +15,8 @@ FREObject getCookies(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
     FREObject cookies_array = NULL;
     FRENewObject((const uint8_t*)"Array", 0, NULL, &cookies_array, nil);
     
+    FREObject cookies_object = NULL;
+    
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     
     NSArray *allCookies = [storage cookies];
@@ -22,22 +24,24 @@ FREObject getCookies(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
     for ( NSHTTPCookie *cookie in allCookies) {
         FREDispatchStatusEventAsync(ctx, (uint8_t*)[cookie.name UTF8String], (uint8_t*)[cookie.value UTF8String]);
         
-        FREObject c;
+        //FREObject c;
         FREObject name;
         FRENewObjectFromUTF8(StrLength([cookie.name UTF8String])+1, (const uint8_t*)[cookie.name UTF8String], &name);
         
         FREObject value;
         FRENewObjectFromUTF8(StrLength([cookie.value UTF8String])+1, (const uint8_t*)[cookie.value UTF8String], &value);
         
-        FRENewObject((const uint8_t*)"Object", 0, NULL, &c,NULL);
-        FRESetObjectProperty(c, (const uint8_t*)"name", name, NULL);
-        FRESetObjectProperty(c, (const uint8_t*)"value", value, NULL);
+        //FRENewObject((const uint8_t*)"Object", 0, NULL, &c,NULL);
+        //FRESetObjectProperty(c, (const uint8_t*)"name", name, NULL);
+        //FRESetObjectProperty(c, (const uint8_t*)"value", value, NULL);
         
-        FRESetArrayElementAt(cookies_array, i, c);
+        FRESetObjectProperty(cookies_object, name, value, NULL);
+        
+        //FRESetArrayElementAt(cookies_array, i, c);
         i++;
     }
     
-    return cookies_array;
+    return cookies_object;
 }
 
 FREObject clearCookies(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
