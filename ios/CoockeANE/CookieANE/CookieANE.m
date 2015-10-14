@@ -49,6 +49,8 @@ FREObject clearAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv
 
 FREObject set(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
+    FREDispatchStatusEventAsync(ctx, (uint8_t*)[@"setCookie" UTF8String], (uint8_t*)[@"init" UTF8String] );
+    
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
     
     NSHTTPCookie *cookie;
@@ -69,6 +71,7 @@ FREObject set(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
     for (cookie in [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies) {
         NSLog(@"%@=%@", cookie.name, cookie.value);
+        FREDispatchStatusEventAsync(ctx, (uint8_t*)[@"setCookie" UTF8String], (uint8_t*)[cookie.name UTF8String] );
     }
     
     return NULL;
@@ -98,7 +101,7 @@ void ContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, u
     func[1].function = &set;
     
     func[2].name = (const uint8_t*) "clearAll";
-    func[2].functionData = NULL;
+    func[2].functionData =   NULL;
     func[2].function = &clearAll;
     
     *functionsToSet = func;
