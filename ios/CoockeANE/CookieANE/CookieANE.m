@@ -13,6 +13,7 @@
 FREObject getAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
     FREObject cookies_array = NULL;
+    FRENewObject((const uint8_t*)"Array", 0, NULL, &cookies_array, nil);
     
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     
