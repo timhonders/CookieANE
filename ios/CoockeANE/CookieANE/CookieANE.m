@@ -12,16 +12,28 @@
 
 FREObject getAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
+    FREObject cookies_array = NULL;
     
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     
     NSArray *allCookies = [storage cookies];
-    
+    int32_t i = 0;
     for ( NSHTTPCookie *cookie in allCookies) {
         FREDispatchStatusEventAsync(ctx, (uint8_t*)[cookie.name UTF8String], (uint8_t*)[cookie.value UTF8String]);
+        
+        FREObject c;
+        FREObject name = (uint8_t*)[cookie.name UTF8String];
+        FREObject value = (uint8_t*)[cookie.value UTF8String];
+        
+        FRENewObject((const uint8_t*)"Object", 0, NULL, &c,NULL);
+        FRESetObjectProperty(c, (const uint8_t*)"name", name, NULL);
+        FRESetObjectProperty(c, (const uint8_t*)"value", value, NULL);
+        
+        FRESetArrayElementAt(cookies_array, i, c);
+        i++;
     }
     
-    return NULL;
+    return cookies_array;
 }
 
 FREObject clearAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
