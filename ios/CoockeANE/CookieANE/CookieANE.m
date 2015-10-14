@@ -49,6 +49,8 @@ FREObject clearAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv
 
 FREObject setCookie(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
     
+    FREDispatchStatusEventAsync(ctx, (uint8_t*)[@"setCookie" UTF8String], (uint8_t*)[@"test" UTF8String]);
+                                
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
     
     NSHTTPCookie *cookie;
