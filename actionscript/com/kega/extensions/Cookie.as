@@ -42,51 +42,61 @@
 			return _instance ? _instance:new Cookie();
 		}
 		
-/*		public static function clearAll():String { if (!_instance) { Cookie.getInstance(); } return _instance.clearAll(); }
-		public function clearAll():String {
-			var result:String = '';
-			
-			try {
-				
-				if (Capabilities.manufacturer.search('iOS') > -1){
-					context.call('helloWorld'); 
-				}
-				
-				result = '[Cookie] clearAll Succes';
-			}catch(error:*){
-				result = '[Cookie] clearAll Error: ' + error;
-				
-			}
-			return result;
-			
-		}*/
 		
-		
-		public static function hello():String { if (!_instance) { Cookie.getInstance(); } return _instance.hello(); }
-		public function hello():String {
-			var result:String = '';
+		public static function getCookies():* { if (!_instance) { Cookie.getInstance(); } return _instance.getCookies(); }
+		public function getCookies():* {
+			var result:*;
 			
 			try {
 				if (Capabilities.manufacturer.search('iOS') > -1){
-					result = context.call('helloWorld') as String; 
+		
+					var cookies:Array = context.call('getCookies') as Array; 
+					result = new Object();
+					for each (var cookie:Object in cookies) {
+						result[cookie.name] = cookie.value;
+					}
+				}else if (Capabilities.manufacturer.search('Android') > -1){
+					context.call('getCookies');
+					result = new Object();
 				}else{
 					result = 'Windows not supported';
 				}
 			}catch(error:*){
-				result = '[Cookie] hello Error: ' + error + ' ' + context;
+				result = '[Cookie] getCookies Error: ' + error + ' ' + context;
 				
 			}
 			return result;
 			
-		}
+		}	
 		
-		public static function setCookie():String { if (!_instance) { Cookie.getInstance(); } return _instance.setCookie(); }
-		public function setCookie():String {
+		public static function clearCookies():String { if (!_instance) { Cookie.getInstance(); } return _instance.clearCookies(); }
+		public function clearCookies():String {
 			var result:String = '';
 			
 			try {
 				if (Capabilities.manufacturer.search('iOS') > -1){
-					result = context.call('set') as String; 
+					result = context.call('clearCookies') as String; 
+				}else{
+					result = 'Windows not supported';
+				}
+			}catch(error:*){
+				result = '[Cookie] clearCookies Error: ' + error + ' ' + context;
+				
+			}
+			return result;
+			
+		}	
+		
+		public static function setCookie(url:String, name:String, value:String):String { if (!_instance) { Cookie.getInstance(); } return _instance.setCookie(url, name, value); }
+		public function setCookie(url:String, name:String, value:String):String {
+			var result:String = '';
+			
+			try {
+				if (Capabilities.manufacturer.search('iOS') > -1){
+					context.call('setCookie', url, name, value); 
+				}else  if (Capabilities.manufacturer.search('Android') > -1){
+					value = name +'='+value;
+					context.call('setCookie', url, value); 
 				}else{
 					result = 'Windows not supported';
 				}

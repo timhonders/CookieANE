@@ -21,6 +21,14 @@
 			</applicationDeployment>
 		</platform>
 		
+		<platform name="Android-ARM"> 
+            <applicationDeployment> 
+                <nativeLibrary>cookie.jar</nativeLibrary> 
+                <initializer>com.kega.extensions.Cookie.Extension</initializer> 
+                <finalizer>com.kega.extensions.Cookie.Extension</finalizer> 
+            </applicationDeployment> 
+        </platform> 
+		
 		<platform name="default"> 
             <applicationDeployment/> 
         </platform> 
